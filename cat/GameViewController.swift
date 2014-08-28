@@ -2,124 +2,245 @@
 //  GameViewController.swift
 //  cat
 //
-//  Created by mohoo on 14/8/19.
+//  Created by mohoo on 14/8/20.
 //  Copyright (c) 2014年 mohoo. All rights reserved.
 //
 
+import Foundation
 import UIKit
-import QuartzCore
-import SceneKit
+var allCircleLocation = [[CircleLocation]]()
+var hasCircle = 0
+var map = [
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0]]
 
 class GameViewController: UIViewController {
-
+ 
+    var button = [[UIButton]]()
+    var catView = UIImageView()
+    var clickPoint : CircleLocation?
+    var cat = CircleLocation(row: 4, col: 4)
+    var gameLevel = 10
+    var pathNumber : Int = 0
+    var odd = 32
+    var width = 30
+    var highth = 35
+    var isGameOver = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.dae")
-        
-        // create and add a camera to the scene
-        let cameraNode = SCNNode()
-        cameraNode.camera = SCNCamera()
-        scene.rootNode.addChildNode(cameraNode)
-        
-        // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
-        
-        // create and add a light to the scene
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light.type = SCNLightTypeOmni
-        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
-        
-        // create and add an ambient light to the scene
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light.type = SCNLightTypeAmbient
-        ambientLightNode.light.color = UIColor.darkGrayColor()
-        scene.rootNode.addChildNode(ambientLightNode)
-        
-        // retrieve the ship node
-        let ship = scene.rootNode.childNodeWithName("ship", recursively: true)
-        
-        // animate the 3d object
-        ship.runAction(SCNAction.repeatActionForever(SCNAction.rotateByX(0, y: 2, z: 0, duration: 1)))
-        
-        // retrieve the SCNView
-        let scnView = self.view as SCNView
-        
-        // set the scene to the view
-        scnView.scene = scene
-        
-        // allows the user to manipulate the camera
-        scnView.allowsCameraControl = true
-        
-        // show statistics such as fps and timing information
-        scnView.showsStatistics = true
-        
-        // configure the view
-        scnView.backgroundColor = UIColor.blackColor()
-        
-        // add a tap gesture recognizer
-        let tapGesture = UITapGestureRecognizer(target: self, action: "handleTap:")
-        let gestureRecognizers = NSMutableArray()
-        gestureRecognizers.addObject(tapGesture)
-        gestureRecognizers.addObjectsFromArray(scnView.gestureRecognizers)
-        scnView.gestureRecognizers = gestureRecognizers
-    }
+        initAllCircleLocation()
+        initscene()
+        initcat()
+        initGame()
+     }
     
-    func handleTap(gestureRecognize: UIGestureRecognizer) {
-        // retrieve the SCNView
-        let scnView = self.view as SCNView
-        
-        // check what nodes are tapped
-        let p = gestureRecognize.locationInView(scnView)
-        let hitResults = scnView.hitTest(p, options: nil)
-        
-        // check that we clicked on at least one object
-        if hitResults.count > 0 {
-            // retrieved the first clicked object
-            let result: AnyObject! = hitResults[0]
-            
-            // get its material
-            let material = result.node!.geometry.firstMaterial
-            
-            // highlight it
-            SCNTransaction.begin()
-            SCNTransaction.setAnimationDuration(0.5)
-            
-            // on completion - unhighlight
-            SCNTransaction.setCompletionBlock {
-                SCNTransaction.begin()
-                SCNTransaction.setAnimationDuration(0.5)
-                
-                material.emission.contents = UIColor.blackColor()
-                
-                SCNTransaction.commit()
+    func initscene(){
+        for j in 0...8 {
+            var button1 = [UIButton]()
+            for i in 0...8 {
+                var btn = UIButton()
+                if j%2 == 0{
+                    btn.frame = CGRectMake(CGFloat(10+i*odd), CGFloat(250+j*odd), CGFloat(width), CGFloat(highth))
+                }
+                else{
+                    btn.frame = CGRectMake(CGFloat(10+i*odd+odd/2), CGFloat(250+j*odd), CGFloat(width), CGFloat(highth))
+                }
+                btn.setImage(UIImage(named: "block2"), forState:.Normal)
+                self.view.addSubview(btn)
+                btn.addTarget(self, action: "changeAndMove:", forControlEvents: .TouchUpInside)
+                button1.append(btn)
             }
-            
-            material.emission.contents = UIColor.redColor()
-            
-            SCNTransaction.commit()
+            button.append(button1)
         }
     }
     
-    override func shouldAutorotate() -> Bool {
-        return true
+
+    
+    func changeAndMove(btn:UIButton){
+        btn.setImage(UIImage(named: "block1"),forState:.Normal)
+        let row = (Int(btn.frame.origin.y)-250) / odd
+        var col = 0
+        if row%2 == 0 {
+            col = (Int(btn.frame.origin.x)-10) / odd
+        }
+        else {
+            col = (Int(btn.frame.origin.x)-10-odd/2) / odd
+        }
+        updateCost(row, col: col)
+        pathNumber++
+        isGameOver = catAutoGo()
+        calAllCost()
+        
+        
+        
+    }
+    func updateCost(row:Int,col:Int){
+        var loc = allCircleLocation[row][col]
+        map[loc.row][loc.col] = 1
+        clickPoint = loc
+        clearAllCost()
+        calAllCost()
+     
+    }
+    func catAutoGo() -> Int{
+        var bestS = getBestLocation()
+        if let best = bestS{
+            var i = self.cat.row
+            var j = self.cat.col
+            if clickPoint!.row == allCircleLocation[i][j].row && clickPoint!.col == allCircleLocation[i][j].col {
+                
+            }
+            else{
+                map[i][j] = 0
+            }
+            self.cat.row = best.row
+            self.cat.col = best.col
+            i = self.cat.row
+            j = self.cat.col
+            map[i][j] = 1
+            if i%2 == 0{
+                catView.frame = CGRectMake(CGFloat(10+j*odd), CGFloat(250+(i-1)*odd), CGFloat(width), CGFloat(highth))
+                
+
+            }
+            else {
+                catView.frame = CGRectMake(CGFloat(10+j*odd+odd/2), CGFloat(250+(i-1)*odd), CGFloat(width), CGFloat(highth))
+            }
+            if cat.isBoundary(){
+                return -1
+            }
+        }
+        else{
+            return 1
+        }
+        return 0
+        
+    }
+    func getBestLocation() -> CircleLocation?{
+        var catAllSelects = allCircleLocation[cat.row][cat.col].getAllConnectLocation()
+        if catAllSelects.count > 0{
+            var best = catAllSelects[0]
+            if best.isBoundary(){
+                return best
+            }
+            for i in 1...catAllSelects.count-1 {
+                if catAllSelects[i].isBoundary(){
+                    best = catAllSelects[i]
+                    break
+                }
+                if best.compare(catAllSelects[i]){
+                    best = catAllSelects[i]
+                }
+            }
+            return best
+        }
+        return nil
+    }
+    func clearAllCost(){
+        for i in 0...8{
+            for j in 0...8{
+                allCircleLocation[i][j].path = -100
+                allCircleLocation[i][j].cost = -100
+            }
+        }
+    }
+    func calAllCost(){
+        for i in 0...8{
+            for j in 0...8{
+                allCircleLocation[i][j].calculateCost()
+                
+            }
+        }
+        for i in 0...8{
+            var k = i
+            for j in 0...i{
+                allCircleLocation[j][k].calculatePath()
+                allCircleLocation[8-j][8-k].calculatePath()
+                k--
+            }
+        }
+        for i in 0...8{
+            var k = 8-i
+            for j in 0...i{
+                allCircleLocation[j][k].calculatePath()
+                allCircleLocation[k][j].calculatePath()
+                k++
+            }
+        }
+        for i in 0...8{
+            for j in 0...8{
+                allCircleLocation[j][i].calculatePath()
+                allCircleLocation[i][j].calculatePath()
+                allCircleLocation[j][8-i].calculatePath()
+                allCircleLocation[8-i][j].calculatePath()
+            }
+        }
+        hasCircle = self.cat.isInCircle()
+        
     }
     
-    override func supportedInterfaceOrientations() -> Int {
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return Int(UIInterfaceOrientationMask.AllButUpsideDown.toRaw())
-        } else {
-            return Int(UIInterfaceOrientationMask.All.toRaw())
+    func initAllCircleLocation(){
+        for j in 0...8 {
+            var rowCircle = [CircleLocation]()
+            for i in 0...8 {
+                var circle = CircleLocation(row:j,col:i)
+                rowCircle.append(circle)
+            }
+            allCircleLocation.append(rowCircle)
         }
     }
     
+    func initcat(){
+        catView.frame = CGRectMake(28*4+20,28*3+170,30,56)
+        self.view.addSubview(catView)
+        var midImage = UIImage(named: "middle2")
+        var leftImage = UIImage(named: "left2")
+        var rightImage = UIImage(named: "right2")
+        catView.animationDuration = 1.0
+        catView.animationImages = [leftImage,midImage,rightImage]
+        catView.startAnimating()
+    }
+    
+    func initGame(){
+        for j in 0...8 {
+            for i in 0...8 {
+                button[i][j].setImage(UIImage(named: "block2"), forState: .Normal)
+            }
+        }
+        catView.frame = CGRectMake(CGFloat(10+4*odd), CGFloat(250+4*odd), CGFloat(width), CGFloat(highth))
+        cat.row = 4
+        cat.col = 4
+        map[4][4] = 1
+        produceGameLevel()
+    }
+    
+    func produceGameLevel(){
+        var num=0
+        while num < gameLevel {
+            var row = Int(arc4random()%9)
+            var col = Int(arc4random()%9)
+            if row != 4 && col != 4 {
+                map[row][col] = 1
+                num++
+                button[row][col].setImage(UIImage(named: "block1"), forState:.Normal)
+            }
+        }
+    }
+    
+    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
     }
-
+    
 }
+
+
