@@ -22,7 +22,6 @@
 		3689F3E419AC1C5000269184 /* icon.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3689F3C719AC1C5000269184 /* icon.jpg */; };
 		3689F3E519AC1C5000269184 /* left2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3689F3C819AC1C5000269184 /* left2.png */; };
 		3689F3E619AC1C5000269184 /* middle2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3689F3C919AC1C5000269184 /* middle2.png */; };
-		3689F3E719AC1C5000269184 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 3689F3CA19AC1C5000269184 /* more.png */; };
 		3689F3E819AC1C5000269184 /* morex2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3689F3CB19AC1C5000269184 /* morex2.png */; };
 		3689F3E919AC1C5000269184 /* notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 3689F3CC19AC1C5000269184 /* notify.png */; };
 		3689F3EA19AC1C5000269184 /* notifyx2.png in Resources */ = {isa = PBXBuildFile; fileRef = 3689F3CD19AC1C5000269184 /* notifyx2.png */; };
@@ -74,7 +73,6 @@
 		3689F3C719AC1C5000269184 /* icon.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = icon.jpg; sourceTree = "<group>"; };
 		3689F3C819AC1C5000269184 /* left2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = left2.png; sourceTree = "<group>"; };
 		3689F3C919AC1C5000269184 /* middle2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = middle2.png; sourceTree = "<group>"; };
-		3689F3CA19AC1C5000269184 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
 		3689F3CB19AC1C5000269184 /* morex2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = morex2.png; sourceTree = "<group>"; };
 		3689F3CC19AC1C5000269184 /* notify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notify.png; sourceTree = "<group>"; };
 		3689F3CD19AC1C5000269184 /* notifyx2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notifyx2.png; sourceTree = "<group>"; };
@@ -138,7 +136,6 @@
 				3689F3C719AC1C5000269184 /* icon.jpg */,
 				3689F3C819AC1C5000269184 /* left2.png */,
 				3689F3C919AC1C5000269184 /* middle2.png */,
-				3689F3CA19AC1C5000269184 /* more.png */,
 				3689F3CB19AC1C5000269184 /* morex2.png */,
 				3689F3CC19AC1C5000269184 /* notify.png */,
 				3689F3CD19AC1C5000269184 /* notifyx2.png */,
@@ -301,7 +298,6 @@
 			files = (
 				3689F3DE19AC1C5000269184 /* backgroundx2.jpg in Resources */,
 				3689F3E419AC1C5000269184 /* icon.jpg in Resources */,
-				3689F3E719AC1C5000269184 /* more.png in Resources */,
 				368A928719A2E3AC0030E83C /* Images.xcassets in Resources */,
 				3689F3EA19AC1C5000269184 /* notifyx2.png in Resources */,
 				3689F3E619AC1C5000269184 /* middle2.png in Resources */,

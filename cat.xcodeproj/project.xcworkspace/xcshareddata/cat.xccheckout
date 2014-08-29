@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C8DA67C2-35EE-4DDB-97A1-986DEE175519</string>
+	<key>IDESourceControlProjectName</key>
+	<string>cat</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CAD673969DDBD426D0B1058FD9F603B0424F162F</key>
+		<string>https://github.com/guoyajie/ccat.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>cat.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CAD673969DDBD426D0B1058FD9F603B0424F162F</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/guoyajie/ccat.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CAD673969DDBD426D0B1058FD9F603B0424F162F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CAD673969DDBD426D0B1058FD9F603B0424F162F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ccat</string>
+		</dict>
+	</array>
+</dict>
+</plist>

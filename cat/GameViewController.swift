@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+
 var allCircleLocation = [[CircleLocation]]()
 var hasCircle = 0
 var map = [
@@ -28,15 +29,17 @@ class GameViewController: UIViewController {
     var clickPoint : CircleLocation?
     var cat = CircleLocation(row: 4, col: 4)
     var gameLevel = 10
-    var pathNumber : Int = 0
+    var pathNumber = 0
     var odd = 32
     var width = 30
     var highth = 35
     var isGameOver = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        initAllCircleLocation()
+        
         initscene()
+        initAllCircleLocation()
+        
         initcat()
         initGame()
      }
@@ -60,11 +63,9 @@ class GameViewController: UIViewController {
             button.append(button1)
         }
     }
-    
-
-    
+   
     func changeAndMove(btn:UIButton){
-        btn.setImage(UIImage(named: "block1"),forState:.Normal)
+        
         let row = (Int(btn.frame.origin.y)-250) / odd
         var col = 0
         if row%2 == 0 {
@@ -73,19 +74,62 @@ class GameViewController: UIViewController {
         else {
             col = (Int(btn.frame.origin.x)-10-odd/2) / odd
         }
-        updateCost(row, col: col)
-        pathNumber++
-        isGameOver = catAutoGo()
-        calAllCost()
+        if (map[row][col] == 1 && ( cat.row != row || cat.col != col) ){
+        }
+        else{
+            btn.setImage(UIImage(named: "block1"),forState:.Normal)
+            updateCost(row, col: col)
+            pathNumber++
+            if self.isGameOver == 1 && self.cat.row == row && self.cat.col == col {
+                showWinAlertView()
+                return
+            }
+            else if self.isGameOver == 1{}
+            else{
+                isGameOver = catAutoGo()
+                if isGameOver == -1 {
+                    showLoseAlertView()
+                    return
+                }
+                else if self.isGameOver == 1 && self.cat.row == row && self.cat.col == col {
+                    showWinAlertView()
+                    return
+                }
+                
+            }
+            
+            //calAllCost()
         
-        
+        }
         
     }
+    func showWinAlertView(){
+        var alert = UIAlertController(title: "你用了\(pathNumber)步", message: "神经猫被成功捉住了", preferredStyle: .Alert)
+        
+        var actionYes = UIAlertAction(title: "退出游戏", style: .Default, handler: {act in exit(-1)})
+        var actionNo = UIAlertAction(title: "再来一次", style: .Default, handler: {act in self.runAgain()})
+        alert.addAction(actionYes)
+        alert.addAction(actionNo)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    func showLoseAlertView(){
+        var alert = UIAlertController(title: "神经猫逃走了", message: "你失败了", preferredStyle: .Alert)
+        var actionYes = UIAlertAction(title: "退出游戏", style: .Default, handler: {act in exit(1)})
+        var actionNo = UIAlertAction(title: "再来一次", style: .Default, handler: {act in self.runAgain()})
+        alert.addAction(actionYes)
+        alert.addAction(actionNo)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func runAgain(){
+        initGame()
+    }
+    
     func updateCost(row:Int,col:Int){
         var loc = allCircleLocation[row][col]
         map[loc.row][loc.col] = 1
         clickPoint = loc
-        clearAllCost()
+        //clearAllCost()
         calAllCost()
      
     }
@@ -94,9 +138,7 @@ class GameViewController: UIViewController {
         if let best = bestS{
             var i = self.cat.row
             var j = self.cat.col
-            if clickPoint!.row == allCircleLocation[i][j].row && clickPoint!.col == allCircleLocation[i][j].col {
-                
-            }
+            if clickPoint!.row == allCircleLocation[i][j].row && clickPoint!.col == allCircleLocation[i][j].col {}
             else{
                 map[i][j] = 0
             }
@@ -106,12 +148,10 @@ class GameViewController: UIViewController {
             j = self.cat.col
             map[i][j] = 1
             if i%2 == 0{
-                catView.frame = CGRectMake(CGFloat(10+j*odd), CGFloat(250+(i-1)*odd), CGFloat(width), CGFloat(highth))
-                
-
+                catView.frame = CGRectMake(CGFloat(10+j*odd), CGFloat(250+i*odd), CGFloat(width), CGFloat(highth))
             }
             else {
-                catView.frame = CGRectMake(CGFloat(10+j*odd+odd/2), CGFloat(250+(i-1)*odd), CGFloat(width), CGFloat(highth))
+                catView.frame = CGRectMake(CGFloat(10+j*odd+odd/2), CGFloat(250+i*odd), CGFloat(width), CGFloat(highth))
             }
             if cat.isBoundary(){
                 return -1
@@ -121,16 +161,15 @@ class GameViewController: UIViewController {
             return 1
         }
         return 0
-        
     }
-    func getBestLocation() -> CircleLocation?{
+    func getBestLocation() -> CircleLocation? {
         var catAllSelects = allCircleLocation[cat.row][cat.col].getAllConnectLocation()
         if catAllSelects.count > 0{
             var best = catAllSelects[0]
             if best.isBoundary(){
                 return best
             }
-            for i in 1...catAllSelects.count-1 {
+            for i in 0...(catAllSelects.count-1) {
                 if catAllSelects[i].isBoundary(){
                     best = catAllSelects[i]
                     break
@@ -152,6 +191,7 @@ class GameViewController: UIViewController {
         }
     }
     func calAllCost(){
+        clearAllCost()
         for i in 0...8{
             for j in 0...8{
                 allCircleLocation[i][j].calculateCost()
@@ -212,6 +252,7 @@ class GameViewController: UIViewController {
         for j in 0...8 {
             for i in 0...8 {
                 button[i][j].setImage(UIImage(named: "block2"), forState: .Normal)
+                map[i][j] = 0
             }
         }
         catView.frame = CGRectMake(CGFloat(10+4*odd), CGFloat(250+4*odd), CGFloat(width), CGFloat(highth))
@@ -219,6 +260,8 @@ class GameViewController: UIViewController {
         cat.col = 4
         map[4][4] = 1
         produceGameLevel()
+        pathNumber = 0
+        isGameOver = 0
     }
     
     func produceGameLevel(){

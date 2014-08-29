@@ -32,7 +32,7 @@ class CircleLocation{
     }
     func getLeftup() -> CircleLocation?{
         var newp : CircleLocation?
-        if row > 0{
+        if row > 0 {
             if row%2 == 0{
                 if col > 0{
                     newp = allCircleLocation[row-1][col-1]
@@ -60,7 +60,7 @@ class CircleLocation{
     }
     func getRightup() -> CircleLocation?{
         var newp : CircleLocation?
-        if row > 0{
+        if row > 0 {
             if row%2 != 0{
                 if col < 8{
                     newp = allCircleLocation[row-1][col+1]
@@ -74,7 +74,7 @@ class CircleLocation{
     }
     func getRightdown() -> CircleLocation?{
         var newp : CircleLocation?
-        if row > 0{
+        if row < 8 {
             if row%2 != 0{
                 if col < 8{
                     newp = allCircleLocation[row+1][col+1]
@@ -129,7 +129,7 @@ class CircleLocation{
     }
     
     func isBoundary() -> Bool {
-        if row == 0 || row == 8 || col == 0 || col == 8 {
+        if (row == 0 || row == 8 || col == 0 || col == 8) {
             return true
         }
         else {
@@ -183,7 +183,7 @@ class CircleLocation{
         return self.path
     }
     func compare(cl:CircleLocation) -> Bool {
-        if hasCircle == 0{
+        if hasCircle == 0 {
             return self.isMoreThan(cl)
         }
         else {
