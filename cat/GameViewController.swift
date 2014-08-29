@@ -21,6 +21,7 @@ var map = [
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0]]
+var degree = 1
 
 class GameViewController: UIViewController {
  
@@ -28,7 +29,7 @@ class GameViewController: UIViewController {
     var catView = UIImageView()
     var clickPoint : CircleLocation?
     var cat = CircleLocation(row: 4, col: 4)
-    var gameLevel = 10
+    var gameLevel = 20
     var pathNumber = 0
     var odd = 32
     var width = 30
@@ -104,7 +105,7 @@ class GameViewController: UIViewController {
         
     }
     func showWinAlertView(){
-        var alert = UIAlertController(title: "你用了\(pathNumber)步", message: "神经猫被成功捉住了", preferredStyle: .Alert)
+        var alert = UIAlertController(title: "你用了\(pathNumber)步成功捉住了神经猫", message: "在所有玩家中排名第\(degree)", preferredStyle: .Alert)
         
         var actionYes = UIAlertAction(title: "退出游戏", style: .Default, handler: {act in exit(-1)})
         var actionNo = UIAlertAction(title: "再来一次", style: .Default, handler: {act in self.runAgain()})
